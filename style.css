@@ -5,7 +5,7 @@
     width: 100%;
     height: 100%;
     background: transparent;
-    font-size: 150%;
+    font-size: 170%;
   }
   .face {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
@@ -131,6 +131,10 @@
   .cub-2 .face {
     background-color:#fc9c7c;
   }
+  .cub-2 .rt
+  {
+    background:url(img/off/gabe.jpg);
+  }
   /* .cub-3 styles */
   .cub-3 {
     transform:translate3D(9.5em, 0em, 0em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
@@ -157,7 +161,7 @@
     background-color:#7cd9fc;
   }
   .cub-3 .lt {
-    background:url(https://i.imgur.com/FRBHN2L.png);
+    background:url(img/off/roblox.jpg);
   }
   /* .cub-4 styles */
   .cub-4 {
@@ -186,13 +190,16 @@
   }
   .cub-4 .tp {
     background-color:#ecd34a;
+    background:url(img/off/doot.jpg);
   }
   .cub-4 .bm {
     background-color:#66e870;
+    background:url(img/off/bongo.jpg);
   }
   .cub-4 .ft {
     width:6em;
     margin-left:0em;
+    background:url(img/off/meem.jpg);
   }
   .cub-4 .bk {
     width:6em;

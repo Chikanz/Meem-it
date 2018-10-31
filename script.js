@@ -51,7 +51,7 @@ class target {
 
 titles = 
 [
-    'red', //'doot it',
+    'red', //'spook it',
     'blue', //'play it',
     'yellow', //'meme it',
     'green', //'yellow it',
@@ -67,7 +67,6 @@ var targets =
 
 function checkTarget(event) 
 {
-
     if(currentTarget == -1) return;
 
     //lol
@@ -95,7 +94,7 @@ function newTarget()
 
     //call out sound here
 
-    document.querySelectorAll(".debug")[4].innerHTML = titles[currentTarget];
+    document.querySelector(".instruction").innerHTML = titles[currentTarget];
 
     if(TimeToBop > 1) TimeToBop -= timerDecrease;
     timer = TimeToBop;

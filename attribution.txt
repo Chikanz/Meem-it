@@ -25,3 +25,9 @@ https://freesound.org/people/crazymonke9/sounds/418105/
 BGM "Loopster" Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 3.0 License
 http://creativecommons.org/licenses/by/3.0/
+
+game over sound 1
+https://freesound.org/people/deleted_user_877451/sounds/76376/
+
+game over sound 2
+https://freesound.org/people/afleetingspeck/sounds/232444/

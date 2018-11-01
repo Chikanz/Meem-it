@@ -36,6 +36,13 @@
     -webkit-text-stroke-width: 1px;
 }
 
+.forceLoad
+{
+  position: absolute;
+  width: 0px;
+  height: 0px;
+}
+
 /*--------anims-----*/
 .bh
 {

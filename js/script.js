@@ -33,10 +33,10 @@ const intervaltime = 100;
 //countdown circle
 var bar = new ProgressBar.Circle(".loader", {
     duration: 200,
-    strokeWidth: 6,
+    strokeWidth: 10,
     color: '#000000',
     trailColor: '#eee',
-    trailWidth: 1,
+    trailWidth: 5,
     svgStyle: null
   });
 
@@ -84,10 +84,18 @@ class target {
     }
 }
 
+var callouts =
+[
+    new Audio('sound/callout/borkit.wav'),
+    new Audio('sound/callout/punchit.wav'),   
+    new Audio('sound/callout/dootit.wav'),
+    new Audio('sound/callout/playit.wav'),
+]
+
 var titles = 
 [
     'Bork it!',
-    'Hit it!', 
+    'Punch it!', 
     'Doot it!',
     'Play it!',
 ]
@@ -110,45 +118,74 @@ var targets =
 
 function checkTarget(event) 
 {
-    if(!runGame) return;
-
-    if(currentTarget == -1) return;
+    if(!runGame) return; //Don't run when game isn't active
 
     //lol
     var y = angleX;
     var x = angleY;
 
-    var t = targets[currentTarget];
+    //Check for failure
+    for(var i = 0; i < targets.length; i++)
+        {
+            if(i == currentTarget) continue;
 
-    if (x > t.xmin && x < t.xmax && y > t.ymin && y < t.ymax) //target check
+            var tc = targets[i];
+
+            if (targetInBounds(tc,x,y))
+            {
+                gameOver();
+                PressButton(tc);
+            }
+        }
+
+    if(currentTarget == -1) return;
+
+    //Check for target
+    var t = targets[currentTarget];
+    if (targetInBounds(t,x,y))
     {
+        //Add score and update display
         score++; 
         document.querySelector(".score").innerHTML = score;
 
-        timer = 99999999; //Let player relax until next target is called
+        //Let player relax until next target is called
+        timer = 99999999; 
         setTimeout(newTarget, getRandomInt(5000));
         currentTarget = -1;
 
         //Turn off instruction
         ins.innerHTML = "";
-        ins.classList.remove('shadowLine');
+        ins.classList.remove('shadowLine');        
 
-        //Sound
-        t.audio.play();
-
-        //anim
-        document.querySelector(t.selector.split(" ")[0]).setAttribute("style",getAnimString(t.XAnim,t.YAnim)) //aaaa
-
-        setTimeout(() => {
-            document.querySelector(t.selector.split(" ")[0]).setAttribute("style",getAnimString(t.Xstart,t.YStart));
-        }, 350);
-
-        //Set face image to smasked and 1back again
-        smack(t, true);
-        setTimeout(() => {
-           smack(t, false) 
-        }, 1000);
+        //Button anim + face change
+        PressButton(t);
     }
+}
+
+function targetInBounds(t,x,y)
+{
+    return x > t.xmin && x < t.xmax && y > t.ymin && y < t.ymax;
+}
+
+function PressButton(t)
+{
+    //Press down anim
+    var e = document.querySelector(t.selector.split(" ")[0]); //Get root elem
+    e.setAttribute("style",getAnimString(t.XAnim, t.YAnim)) //Pushdown
+
+    setTimeout(() => {
+        e.setAttribute("style",getAnimString(t.Xstart, t.YStart)); //Back up
+    }, 350);
+
+    //Change face image
+    smack(t, true);
+    setTimeout(() => 
+    {
+       smack(t, false) 
+    }, 1000);
+
+    //Play Sound
+    t.audio.play();
 }
 
 function getAnimString(x, y)
@@ -169,7 +206,8 @@ function newTarget()
 
     currentTarget = getRandomInt(targets.length);
 
-    //call out sound here 
+    callouts[currentTarget].play();
+    
     ins.innerHTML = titles[currentTarget];
     ins.classList.add('shadowLine');
 
@@ -188,22 +226,24 @@ function gameStart()
 {
     if(runGame || !canclick) return;
 
-    BGM.play();
     runGame = true;
-    newTarget();
-    setTimeout(gameLoop, intervaltime);
-    document.querySelector(".score").innerHTML = 0;
-
+    BGM.play(); //Can't auto play audio so play it here
+    
     //Get high score
     var hs = window.localStorage.getItem('score')
     document.querySelector(".highscore").innerHTML = hs;
 
+    //Reset game state
+    document.querySelector(".score").innerHTML = 0;
     score = 0;
     timer = 9999;
     TimeToBop = 5000;
+    setTimeout(gameLoop, intervaltime);
+    newTarget();
 
+    //Reset loading bar
     bar.stop();
-    bar.set(1);
+    bar.animate(1);    
 }
 
 var gameover = new Audio('sound/gameover.wav');
@@ -212,8 +252,11 @@ function gameOver()
 {
     runGame = false;
     canclick = false;
+
     gameover.play();
+
     document.querySelector(".instruction").innerHTML = "Game over! <br> Click to play again";
+    ins.classList.add('shadowLine');
 
     var hs = window.localStorage.getItem('score')
     if(score > hs)
